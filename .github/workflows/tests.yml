@@ -1,0 +1,46 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.2'
+            symfony: '6.4'
+          - php: '8.3'
+            symfony: '6.4'
+          - php: '8.4'
+            symfony: '6.4'
+          - php: '8.2'
+            symfony: '7.4'
+          - php: '8.3'
+            symfony: '7.4'
+          - php: '8.4'
+            symfony: '7.4'
+          - php: '8.4'
+            symfony: '8.0'
+
+    name: PHP ${{ matrix.php }} / Symfony ${{ matrix.symfony }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout shared PHP core
+        run: git clone --depth 1 https://github.com/pryznar/tracium-php-core.git ../php-core
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - run: composer require --no-update "symfony/console:^${{ matrix.symfony }}" "symfony/config:^${{ matrix.symfony }}" "symfony/dependency-injection:^${{ matrix.symfony }}" "symfony/framework-bundle:^${{ matrix.symfony }}" "symfony/http-client:^${{ matrix.symfony }}" "symfony/http-kernel:^${{ matrix.symfony }}" "symfony/messenger:^${{ matrix.symfony }}" "symfony/routing:^${{ matrix.symfony }}" "symfony/uid:^${{ matrix.symfony }}"
+      - run: composer update --prefer-dist --no-interaction
+      - run: composer validate --strict
+      - run: composer test
+      - run: composer phpstan
