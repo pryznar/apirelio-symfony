@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 use Apirelio\Core\Data\EventContext;
 use Apirelio\Core\ErrorCodeExtractor;
 use Apirelio\Core\EventFactory;
@@ -18,6 +13,11 @@ use Apirelio\Symfony\Contracts\CustomerResolver;
 use Apirelio\Symfony\Contracts\EventTransport;
 use Apirelio\Symfony\Data\ApirelioApplication;
 use Apirelio\Symfony\Support\RouteNormalizer;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 final readonly class ApirelioManager
 {
@@ -30,9 +30,9 @@ final readonly class ApirelioManager
         private ApplicationResolver $applications,
         private array $config,
         private ?LoggerInterface $logger = null,
-        private EventFactory $events = new EventFactory(),
-        private MetadataSanitizer $metadata = new MetadataSanitizer(),
-        private ErrorCodeExtractor $errorCodes = new ErrorCodeExtractor(),
+        private EventFactory $events = new EventFactory,
+        private MetadataSanitizer $metadata = new MetadataSanitizer,
+        private ErrorCodeExtractor $errorCodes = new ErrorCodeExtractor,
     ) {}
 
     public function setErrorCode(string $errorCode): self
@@ -153,7 +153,7 @@ final readonly class ApirelioManager
     }
 
     /**
-     * @param array<string, bool|float|int|string|null> $metadata
+     * @param  array<string, bool|float|int|string|null>  $metadata
      * @return array<string, bool|float|int|string|null>
      */
     private function sanitizeMetadata(array $metadata): array

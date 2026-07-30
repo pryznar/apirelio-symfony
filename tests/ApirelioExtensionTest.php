@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Apirelio\Symfony\Command\FlushBufferCommand;
 use Apirelio\Symfony\Contracts\EventTransport;
 use Apirelio\Symfony\DependencyInjection\ApirelioExtension;
@@ -13,15 +11,17 @@ use Apirelio\Symfony\EventSubscriber\TrackApiRequestSubscriber;
 use Apirelio\Symfony\MessageHandler\BufferApirelioEventsHandler;
 use Apirelio\Symfony\Transport\HttpBatchTransport;
 use Apirelio\Symfony\Transport\MessengerTransport;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class ApirelioExtensionTest extends TestCase
 {
     public function test_it_registers_the_sync_transport_and_framework_integrations(): void
     {
-        $container = new ContainerBuilder();
+        $container = new ContainerBuilder;
         $container->setParameter('kernel.cache_dir', '/tmp/symfony-cache');
 
-        (new ApirelioExtension())->load([[
+        (new ApirelioExtension)->load([[
             'api_key' => 'apr_test_secret',
             'transport' => 'sync',
         ]], $container);
@@ -38,10 +38,10 @@ final class ApirelioExtensionTest extends TestCase
 
     public function test_it_registers_the_configured_messenger_transport(): void
     {
-        $container = new ContainerBuilder();
+        $container = new ContainerBuilder;
         $container->setParameter('kernel.cache_dir', '/tmp/symfony-cache');
 
-        (new ApirelioExtension())->load([[
+        (new ApirelioExtension)->load([[
             'api_key' => 'apr_test_secret',
             'transport' => 'messenger',
             'messenger_bus' => 'command.bus',

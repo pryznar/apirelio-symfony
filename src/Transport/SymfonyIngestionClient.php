@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Transport;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Apirelio\Core\Contracts\IngestionClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class SymfonyIngestionClient implements IngestionClient
 {

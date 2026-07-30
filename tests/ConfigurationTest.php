@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Tests;
 
+use Apirelio\Symfony\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
-use Apirelio\Symfony\DependencyInjection\Configuration;
 
 final class ConfigurationTest extends TestCase
 {
     public function test_it_exposes_safe_production_defaults(): void
     {
-        $config = (new Processor())->processConfiguration(new Configuration(), []);
+        $config = (new Processor)->processConfiguration(new Configuration, []);
 
         self::assertTrue($config['enabled']);
         self::assertSame('messenger', $config['transport']);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Transport;
 
-use Symfony\Component\Messenger\MessageBusInterface;
 use Apirelio\Symfony\Contracts\EventTransport;
 use Apirelio\Symfony\Message\BufferApirelioEvents;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class MessengerTransport implements EventTransport
 {

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Tests;
 
+use Apirelio\Symfony\Support\RouteNormalizer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Apirelio\Symfony\Support\RouteNormalizer;
 
 final class RouteNormalizerTest extends TestCase
 {
     public function test_it_uses_the_symfony_route_template(): void
     {
-        $routes = new RouteCollection();
+        $routes = new RouteCollection;
         $routes->add('invoice.show', new Route('/api/invoices/{invoice}'));
         $router = $this->createMock(RouterInterface::class);
         $router->method('getRouteCollection')->willReturn($routes);

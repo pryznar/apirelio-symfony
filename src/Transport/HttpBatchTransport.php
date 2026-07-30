@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Transport;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Apirelio\Core\Config\TransportConfig;
 use Apirelio\Symfony\Contracts\EventTransport;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class HttpBatchTransport extends \Apirelio\Core\Transport\HttpBatchTransport implements EventTransport
 {

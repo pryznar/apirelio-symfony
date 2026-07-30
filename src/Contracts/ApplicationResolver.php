@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Contracts;
 
-use Symfony\Component\HttpFoundation\Request;
 use Apirelio\Symfony\Data\ApirelioApplication;
+use Symfony\Component\HttpFoundation\Request;
 
 interface ApplicationResolver
 {

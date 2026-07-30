@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\EventSubscriber;
 
+use Apirelio\Symfony\ApirelioManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -11,11 +12,11 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Apirelio\Symfony\ApirelioManager;
 
 final readonly class TrackApiRequestSubscriber implements EventSubscriberInterface
 {
     private const START_ATTRIBUTE = 'apirelio.started_at';
+
     private const CAPTURED_ATTRIBUTE = 'apirelio.captured';
 
     public function __construct(private ApirelioManager $apirelio) {}

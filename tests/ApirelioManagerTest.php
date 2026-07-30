@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Tests;
 
+use Apirelio\Symfony\ApirelioManager;
+use Apirelio\Symfony\Contracts\ApplicationResolver;
+use Apirelio\Symfony\Contracts\CustomerResolver;
+use Apirelio\Symfony\Contracts\EventTransport;
+use Apirelio\Symfony\Data\ApirelioApplication;
+use Apirelio\Symfony\Data\ApirelioCustomer;
+use Apirelio\Symfony\Support\RouteNormalizer;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use RuntimeException;
@@ -13,19 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Apirelio\Symfony\Contracts\ApplicationResolver;
-use Apirelio\Symfony\Contracts\CustomerResolver;
-use Apirelio\Symfony\Contracts\EventTransport;
-use Apirelio\Symfony\Data\ApirelioApplication;
-use Apirelio\Symfony\Data\ApirelioCustomer;
-use Apirelio\Symfony\Support\RouteNormalizer;
-use Apirelio\Symfony\ApirelioManager;
 
 final class ApirelioManagerTest extends TestCase
 {
     public function test_it_captures_the_shared_privacy_safe_event_contract(): void
     {
-        $transport = new class implements EventTransport {
+        $transport = new class implements EventTransport
+        {
             /** @var list<array<string, mixed>> */
             public array $events = [];
 
@@ -44,7 +45,7 @@ final class ApirelioManagerTest extends TestCase
             '{"card_number":"never capture"}',
         );
         $request->attributes->set('_route', 'invoice.create');
-        $stack = new RequestStack();
+        $stack = new RequestStack;
         $stack->push($request);
         $manager = $this->manager($stack, $transport);
 
@@ -72,7 +73,8 @@ final class ApirelioManagerTest extends TestCase
 
     public function test_transport_failure_never_escapes_into_the_application(): void
     {
-        $transport = new class implements EventTransport {
+        $transport = new class implements EventTransport
+        {
             public function send(array $events): void
             {
                 throw new RuntimeException('Network unavailable');
@@ -80,7 +82,7 @@ final class ApirelioManagerTest extends TestCase
         };
         $request = Request::create('/api/invoices', 'GET');
         $request->attributes->set('_route', 'invoice.index');
-        $stack = new RequestStack();
+        $stack = new RequestStack;
         $stack->push($request);
 
         $this->manager($stack, $transport)->capture($request, new Response('OK'), 5);
@@ -89,18 +91,20 @@ final class ApirelioManagerTest extends TestCase
 
     private function manager(RequestStack $stack, EventTransport $transport): ApirelioManager
     {
-        $routes = new RouteCollection();
+        $routes = new RouteCollection;
         $routes->add('invoice.create', new Route('/api/invoices/{invoice}'));
         $routes->add('invoice.index', new Route('/api/invoices'));
         $router = $this->createMock(RouterInterface::class);
         $router->method('getRouteCollection')->willReturn($routes);
-        $customers = new class implements CustomerResolver {
+        $customers = new class implements CustomerResolver
+        {
             public function resolve(Request $request): ApirelioCustomer
             {
                 return new ApirelioCustomer('customer_42', 'Acme Europe', 'growth');
             }
         };
-        $applications = new class implements ApplicationResolver {
+        $applications = new class implements ApplicationResolver
+        {
             public function resolve(Request $request): ApirelioApplication
             {
                 return new ApirelioApplication('billing-production', 'Billing Production');
@@ -125,7 +129,7 @@ final class ApirelioManagerTest extends TestCase
                 'metadata_keys' => ['region', 'api_token'],
                 'error_code_json_path' => 'error.code',
             ],
-            new NullLogger(),
+            new NullLogger,
         );
     }
 }

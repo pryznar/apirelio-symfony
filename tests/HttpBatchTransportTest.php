@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Apirelio\Symfony\Tests;
 
+use Apirelio\Symfony\Transport\HttpBatchTransport;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Apirelio\Symfony\Transport\HttpBatchTransport;
 
 final class HttpBatchTransportTest extends TestCase
 {
