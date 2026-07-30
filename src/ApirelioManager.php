@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony;
+namespace Apirelio\Symfony;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
-use Tracium\Core\Data\EventContext;
-use Tracium\Core\ErrorCodeExtractor;
-use Tracium\Core\EventFactory;
-use Tracium\Core\MetadataSanitizer;
-use Tracium\Symfony\Contracts\ApplicationResolver;
-use Tracium\Symfony\Contracts\CustomerResolver;
-use Tracium\Symfony\Contracts\EventTransport;
-use Tracium\Symfony\Data\TraciumApplication;
-use Tracium\Symfony\Support\RouteNormalizer;
+use Apirelio\Core\Data\EventContext;
+use Apirelio\Core\ErrorCodeExtractor;
+use Apirelio\Core\EventFactory;
+use Apirelio\Core\MetadataSanitizer;
+use Apirelio\Symfony\Contracts\ApplicationResolver;
+use Apirelio\Symfony\Contracts\CustomerResolver;
+use Apirelio\Symfony\Contracts\EventTransport;
+use Apirelio\Symfony\Data\ApirelioApplication;
+use Apirelio\Symfony\Support\RouteNormalizer;
 
-final readonly class TraciumManager
+final readonly class ApirelioManager
 {
     /** @param array<string, mixed> $config */
     public function __construct(
@@ -38,7 +38,7 @@ final readonly class TraciumManager
     public function setErrorCode(string $errorCode): self
     {
         $this->requests->getCurrentRequest()?->attributes->set(
-            'tracium.error_code',
+            'apirelio.error_code',
             mb_substr($errorCode, 0, 255),
         );
 
@@ -54,8 +54,8 @@ final readonly class TraciumManager
         }
 
         /** @var array<string, bool|float|int|string|null> $current */
-        $current = $request->attributes->get('tracium.metadata', []);
-        $request->attributes->set('tracium.metadata', array_merge($current, $this->sanitizeMetadata($metadata)));
+        $current = $request->attributes->get('apirelio.metadata', []);
+        $request->attributes->set('apirelio.metadata', array_merge($current, $this->sanitizeMetadata($metadata)));
 
         return $this;
     }
@@ -74,7 +74,7 @@ final readonly class TraciumManager
             $customer = $this->customers->resolve($request);
             $application = $this->applications->resolve($request);
             if (is_string($application)) {
-                $application = new TraciumApplication($application);
+                $application = new ApirelioApplication($application);
             }
             $metadata = $this->requestMetadata($request);
             if ($exception !== null) {
@@ -103,15 +103,15 @@ final readonly class TraciumManager
             ))]);
         } catch (Throwable $throwable) {
             try {
-                $this->logger?->warning('Tracium event capture failed.', [
+                $this->logger?->warning('Apirelio event capture failed.', [
                     'exception' => $throwable,
                 ]);
             } catch (Throwable) {
                 // Analytics must never alter the application response.
             }
         } finally {
-            $request->attributes->remove('tracium.error_code');
-            $request->attributes->remove('tracium.metadata');
+            $request->attributes->remove('apirelio.error_code');
+            $request->attributes->remove('apirelio.metadata');
         }
     }
 
@@ -138,7 +138,7 @@ final readonly class TraciumManager
     private function requestMetadata(Request $request): array
     {
         /** @var array<string, bool|float|int|string|null> $metadata */
-        $metadata = $request->attributes->get('tracium.metadata', []);
+        $metadata = $request->attributes->get('apirelio.metadata', []);
         /** @var list<string> $headers */
         $headers = $this->config['capture_headers'];
 
@@ -166,7 +166,7 @@ final readonly class TraciumManager
 
     private function errorCode(Request $request, ?Response $response): ?string
     {
-        $explicit = $request->attributes->get('tracium.error_code');
+        $explicit = $request->attributes->get('apirelio.error_code');
         $content = $response?->getContent();
 
         return $this->errorCodes->extract(

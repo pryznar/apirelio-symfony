@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\DependencyInjection;
+namespace Apirelio\Symfony\DependencyInjection;
 
 use Psr\Log\LoggerInterface;
 use LogicException;
@@ -13,21 +13,21 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Tracium\Symfony\Contracts\ApplicationResolver;
-use Tracium\Symfony\Contracts\CustomerResolver;
-use Tracium\Symfony\Contracts\EventTransport;
-use Tracium\Symfony\Command\FlushBufferCommand;
-use Tracium\Symfony\EventSubscriber\TrackApiRequestSubscriber;
-use Tracium\Symfony\MessageHandler\BufferTraciumEventsHandler;
-use Tracium\Symfony\Resolver\NullApplicationResolver;
-use Tracium\Symfony\Resolver\NullCustomerResolver;
-use Tracium\Symfony\Support\RouteNormalizer;
-use Tracium\Symfony\TraciumManager;
-use Tracium\Symfony\Transport\FileBufferTransport;
-use Tracium\Symfony\Transport\HttpBatchTransport;
-use Tracium\Symfony\Transport\MessengerTransport;
+use Apirelio\Symfony\Contracts\ApplicationResolver;
+use Apirelio\Symfony\Contracts\CustomerResolver;
+use Apirelio\Symfony\Contracts\EventTransport;
+use Apirelio\Symfony\Command\FlushBufferCommand;
+use Apirelio\Symfony\EventSubscriber\TrackApiRequestSubscriber;
+use Apirelio\Symfony\MessageHandler\BufferApirelioEventsHandler;
+use Apirelio\Symfony\Resolver\NullApplicationResolver;
+use Apirelio\Symfony\Resolver\NullCustomerResolver;
+use Apirelio\Symfony\Support\RouteNormalizer;
+use Apirelio\Symfony\ApirelioManager;
+use Apirelio\Symfony\Transport\FileBufferTransport;
+use Apirelio\Symfony\Transport\HttpBatchTransport;
+use Apirelio\Symfony\Transport\MessengerTransport;
 
-final class TraciumExtension extends Extension
+final class ApirelioExtension extends Extension
 {
     /** @param array<int, array<string, mixed>> $configs */
     public function load(array $configs, ContainerBuilder $container): void
@@ -39,7 +39,7 @@ final class TraciumExtension extends Extension
                 throw new LogicException('The kernel.cache_dir parameter must be a string.');
             }
 
-            $config['buffer_path'] = rtrim($cacheDirectory, '/').'/tracium/events.ndjson';
+            $config['buffer_path'] = rtrim($cacheDirectory, '/').'/apirelio/events.ndjson';
         }
 
         $container->register(NullCustomerResolver::class);
@@ -58,18 +58,18 @@ final class TraciumExtension extends Extension
 
         $transportName = $config['transport'];
         if (!is_string($transportName)) {
-            throw new LogicException('The tracium.transport option must be a string.');
+            throw new LogicException('The apirelio.transport option must be a string.');
         }
 
         $transport = match ($transportName) {
             'sync' => HttpBatchTransport::class,
             'file_buffer' => FileBufferTransport::class,
             'messenger' => $this->registerMessengerTransport($container, (string) $config['messenger_bus']),
-            default => throw new LogicException(sprintf('Unsupported Tracium transport "%s".', $transportName)),
+            default => throw new LogicException(sprintf('Unsupported Apirelio transport "%s".', $transportName)),
         };
         $container->setAlias(EventTransport::class, $transport);
 
-        $container->register(TraciumManager::class)
+        $container->register(ApirelioManager::class)
             ->setPublic(true)
             ->setArguments([
                 new Reference(RequestStack::class),
@@ -80,12 +80,12 @@ final class TraciumExtension extends Extension
                 $config,
                 new Reference(LoggerInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ]);
-        $container->setAlias('tracium', TraciumManager::class)->setPublic(true);
+        $container->setAlias('apirelio', ApirelioManager::class)->setPublic(true);
 
         $container->register(TrackApiRequestSubscriber::class)
-            ->setArgument('$tracium', new Reference(TraciumManager::class))
+            ->setArgument('$apirelio', new Reference(ApirelioManager::class))
             ->addTag('kernel.event_subscriber');
-        $container->register(BufferTraciumEventsHandler::class)
+        $container->register(BufferApirelioEventsHandler::class)
             ->setArgument('$transport', new Reference(HttpBatchTransport::class))
             ->addTag('messenger.message_handler');
         $container->register(FlushBufferCommand::class)

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Transport;
+namespace Apirelio\Symfony\Transport;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Tracium\Core\Contracts\IngestionClient;
+use Apirelio\Core\Contracts\IngestionClient;
 
 final readonly class SymfonyIngestionClient implements IngestionClient
 {

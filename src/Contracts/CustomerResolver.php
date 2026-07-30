@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Contracts;
+namespace Apirelio\Symfony\Contracts;
 
 use Symfony\Component\HttpFoundation\Request;
-use Tracium\Symfony\Data\TraciumCustomer;
+use Apirelio\Symfony\Data\ApirelioCustomer;
 
 interface CustomerResolver
 {
-    public function resolve(Request $request): ?TraciumCustomer;
+    public function resolve(Request $request): ?ApirelioCustomer;
 }

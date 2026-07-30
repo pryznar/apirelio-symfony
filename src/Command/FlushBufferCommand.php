@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Command;
+namespace Apirelio\Symfony\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tracium\Symfony\Transport\FileBufferTransport;
+use Apirelio\Symfony\Transport\FileBufferTransport;
 
 #[AsCommand(
-    name: 'tracium:flush',
-    description: 'Flush buffered Tracium events to the ingestion API.',
+    name: 'apirelio:flush',
+    description: 'Flush buffered Apirelio events to the ingestion API.',
 )]
 final class FlushBufferCommand extends Command
 {
@@ -24,7 +24,7 @@ final class FlushBufferCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->transport->flushIfDue(true);
-        $output->writeln('<info>Tracium event buffer flushed.</info>');
+        $output->writeln('<info>Apirelio event buffer flushed.</info>');
 
         return self::SUCCESS;
     }

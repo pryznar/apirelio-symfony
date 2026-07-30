@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Resolver;
+namespace Apirelio\Symfony\Resolver;
 
 use Symfony\Component\HttpFoundation\Request;
-use Tracium\Symfony\Contracts\ApplicationResolver;
-use Tracium\Symfony\Data\TraciumApplication;
+use Apirelio\Symfony\Contracts\ApplicationResolver;
+use Apirelio\Symfony\Data\ApirelioApplication;
 
 final class NullApplicationResolver implements ApplicationResolver
 {
-    public function resolve(Request $request): TraciumApplication|string|null
+    public function resolve(Request $request): ApirelioApplication|string|null
     {
         return null;
     }

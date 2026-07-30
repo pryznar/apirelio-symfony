@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Contracts;
+namespace Apirelio\Symfony\Contracts;
 
-interface EventTransport extends \Tracium\Core\Contracts\EventTransport {}
+interface EventTransport extends \Apirelio\Core\Contracts\EventTransport {}

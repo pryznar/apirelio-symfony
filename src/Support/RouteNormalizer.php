@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Support;
+namespace Apirelio\Symfony\Support;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;

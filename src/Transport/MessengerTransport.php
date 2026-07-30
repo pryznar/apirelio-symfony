@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Transport;
+namespace Apirelio\Symfony\Transport;
 
 use Symfony\Component\Messenger\MessageBusInterface;
-use Tracium\Symfony\Contracts\EventTransport;
-use Tracium\Symfony\Message\BufferTraciumEvents;
+use Apirelio\Symfony\Contracts\EventTransport;
+use Apirelio\Symfony\Message\BufferApirelioEvents;
 
 final readonly class MessengerTransport implements EventTransport
 {
@@ -15,7 +15,7 @@ final readonly class MessengerTransport implements EventTransport
     public function send(array $events): void
     {
         if ($events !== []) {
-            $this->bus->dispatch(new BufferTraciumEvents($events));
+            $this->bus->dispatch(new BufferApirelioEvents($events));
         }
     }
 }

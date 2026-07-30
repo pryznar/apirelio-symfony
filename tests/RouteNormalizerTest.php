@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Tests;
+namespace Apirelio\Symfony\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Tracium\Symfony\Support\RouteNormalizer;
+use Apirelio\Symfony\Support\RouteNormalizer;
 
 final class RouteNormalizerTest extends TestCase
 {

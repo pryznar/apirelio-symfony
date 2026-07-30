@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\DependencyInjection;
+namespace Apirelio\Symfony\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -12,13 +12,13 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('tracium');
+        $treeBuilder = new TreeBuilder('apirelio');
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
         $children = $rootNode->children();
         $children->booleanNode('enabled')->defaultTrue();
-        $children->scalarNode('endpoint')->defaultValue('https://ingest.tracium.example')->cannotBeEmpty();
+        $children->scalarNode('endpoint')->defaultValue('https://api.apirelio.com')->cannotBeEmpty();
         $children->scalarNode('api_key')->defaultValue('');
         $children->scalarNode('service')->defaultValue('symfony')->cannotBeEmpty();
         $children->scalarNode('environment')->defaultValue('production')->cannotBeEmpty();

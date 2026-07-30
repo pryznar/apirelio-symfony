@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Resolver;
+namespace Apirelio\Symfony\Resolver;
 
 use Symfony\Component\HttpFoundation\Request;
-use Tracium\Symfony\Contracts\CustomerResolver;
-use Tracium\Symfony\Data\TraciumCustomer;
+use Apirelio\Symfony\Contracts\CustomerResolver;
+use Apirelio\Symfony\Data\ApirelioCustomer;
 
 final class NullCustomerResolver implements CustomerResolver
 {
-    public function resolve(Request $request): ?TraciumCustomer
+    public function resolve(Request $request): ?ApirelioCustomer
     {
         return null;
     }

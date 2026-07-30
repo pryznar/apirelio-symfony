@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\EventSubscriber;
+namespace Apirelio\Symfony\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,14 +11,14 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tracium\Symfony\TraciumManager;
+use Apirelio\Symfony\ApirelioManager;
 
 final readonly class TrackApiRequestSubscriber implements EventSubscriberInterface
 {
-    private const START_ATTRIBUTE = 'tracium.started_at';
-    private const CAPTURED_ATTRIBUTE = 'tracium.captured';
+    private const START_ATTRIBUTE = 'apirelio.started_at';
+    private const CAPTURED_ATTRIBUTE = 'apirelio.captured';
 
-    public function __construct(private TraciumManager $tracium) {}
+    public function __construct(private ApirelioManager $apirelio) {}
 
     /** @return array<string, string|array{string, int}> */
     public static function getSubscribedEvents(): array
@@ -48,7 +48,7 @@ final readonly class TrackApiRequestSubscriber implements EventSubscriberInterfa
             return;
         }
 
-        $this->tracium->capture($request, $event->getResponse(), $this->duration($request->attributes->get(self::START_ATTRIBUTE)));
+        $this->apirelio->capture($request, $event->getResponse(), $this->duration($request->attributes->get(self::START_ATTRIBUTE)));
         $request->attributes->set(self::CAPTURED_ATTRIBUTE, true);
     }
 
@@ -65,7 +65,7 @@ final readonly class TrackApiRequestSubscriber implements EventSubscriberInterfa
 
         $exception = $event->getThrowable();
         $status = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
-        $this->tracium->capture(
+        $this->apirelio->capture(
             $request,
             new Response('', $status),
             $this->duration($request->attributes->get(self::START_ATTRIBUTE)),

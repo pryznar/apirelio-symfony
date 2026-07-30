@@ -5,7 +5,7 @@
          colors="true"
          cacheDirectory=".phpunit.cache">
     <testsuites>
-        <testsuite name="Tracium Symfony SDK">
+        <testsuite name="Apirelio Symfony SDK">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

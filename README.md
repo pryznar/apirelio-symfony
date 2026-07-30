@@ -1,10 +1,10 @@
-# Tracium Symfony SDK
+# Apirelio Symfony SDK
 
 Fail-safe customer integration analytics for Symfony APIs. The bundle records
 normalized endpoint metrics and customer context without capturing request or
 response bodies, credentials, cookies, query strings, IP addresses, or personal
 data. The shared event contract, privacy rules and delivery primitives come
-from `tracium/php-core`, installed automatically by Composer.
+from `apirelio/php-core`, installed automatically by Composer.
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Symfony 8 itself requires PHP 8.4. Symfony 6.4 and 7.4 can be used on PHP 8.2.
 ## Installation
 
 ```bash
-composer require tracium/symfony:^0.1
+composer require apirelio/symfony:^0.2
 ```
 
 Register the bundle:
@@ -25,30 +25,30 @@ Register the bundle:
 // config/bundles.php
 return [
     // ...
-    Tracium\Symfony\TraciumBundle::class => ['all' => true],
+    Apirelio\Symfony\ApirelioBundle::class => ['all' => true],
 ];
 ```
 
-Configure the project key shown once in the Tracium dashboard:
+Configure the project key shown once in the Apirelio dashboard:
 
 ```dotenv
-TRACIUM_ENABLED=true
-TRACIUM_ENDPOINT=https://ingest.tracium.example
-TRACIUM_API_KEY=trc_live_xxxxxxxxx
-TRACIUM_SERVICE=billing-api
-TRACIUM_ENVIRONMENT=production
-TRACIUM_RELEASE=2026.07.29.1
+APIRELIO_ENABLED=true
+APIRELIO_ENDPOINT=https://api.apirelio.com
+APIRELIO_API_KEY=apr_live_xxxxxxxxx
+APIRELIO_SERVICE=billing-api
+APIRELIO_ENVIRONMENT=production
+APIRELIO_RELEASE=2026.07.29.1
 ```
 
 ```yaml
-# config/packages/tracium.yaml
-tracium:
-    enabled: '%env(bool:TRACIUM_ENABLED)%'
-    endpoint: '%env(TRACIUM_ENDPOINT)%'
-    api_key: '%env(TRACIUM_API_KEY)%'
-    service: '%env(TRACIUM_SERVICE)%'
-    environment: '%env(TRACIUM_ENVIRONMENT)%'
-    release: '%env(TRACIUM_RELEASE)%'
+# config/packages/apirelio.yaml
+apirelio:
+    enabled: '%env(bool:APIRELIO_ENABLED)%'
+    endpoint: '%env(APIRELIO_ENDPOINT)%'
+    api_key: '%env(APIRELIO_API_KEY)%'
+    service: '%env(APIRELIO_SERVICE)%'
+    environment: '%env(APIRELIO_ENVIRONMENT)%'
+    release: '%env(APIRELIO_RELEASE)%'
     transport: messenger
     paths:
         - /api/*
@@ -68,7 +68,7 @@ request. Route the SDK message to an asynchronous transport:
 framework:
     messenger:
         routing:
-            'Tracium\Symfony\Message\BufferTraciumEvents': async
+            'Apirelio\Symfony\Message\BufferApirelioEvents': async
 ```
 
 Run your normal Messenger worker:
@@ -87,21 +87,21 @@ Create application-specific resolvers:
 ```php
 <?php
 
-namespace App\Tracium;
+namespace App\Apirelio;
 
 use Symfony\Component\HttpFoundation\Request;
-use Tracium\Symfony\Contracts\CustomerResolver;
-use Tracium\Symfony\Data\TraciumCustomer;
+use Apirelio\Symfony\Contracts\CustomerResolver;
+use Apirelio\Symfony\Data\ApirelioCustomer;
 
 final class ApiCustomerResolver implements CustomerResolver
 {
-    public function resolve(Request $request): ?TraciumCustomer
+    public function resolve(Request $request): ?ApirelioCustomer
     {
         $client = $request->attributes->get('api_client');
 
         return $client === null
             ? null
-            : new TraciumCustomer(
+            : new ApirelioCustomer(
                 id: (string) $client->companyId,
                 name: $client->companyName,
                 plan: $client->plan,
@@ -113,21 +113,21 @@ final class ApiCustomerResolver implements CustomerResolver
 ```php
 <?php
 
-namespace App\Tracium;
+namespace App\Apirelio;
 
 use Symfony\Component\HttpFoundation\Request;
-use Tracium\Symfony\Contracts\ApplicationResolver;
-use Tracium\Symfony\Data\TraciumApplication;
+use Apirelio\Symfony\Contracts\ApplicationResolver;
+use Apirelio\Symfony\Data\ApirelioApplication;
 
 final class ApiApplicationResolver implements ApplicationResolver
 {
-    public function resolve(Request $request): ?TraciumApplication
+    public function resolve(Request $request): ?ApirelioApplication
     {
         $client = $request->attributes->get('api_client');
 
         return $client === null
             ? null
-            : new TraciumApplication(
+            : new ApirelioApplication(
                 id: (string) $client->id,
                 name: $client->name,
             );
@@ -140,11 +140,11 @@ Bind them to the SDK contracts:
 ```yaml
 # config/services.yaml
 services:
-    Tracium\Symfony\Contracts\CustomerResolver:
-        alias: App\Tracium\ApiCustomerResolver
+    Apirelio\Symfony\Contracts\CustomerResolver:
+        alias: App\Apirelio\ApiCustomerResolver
 
-    Tracium\Symfony\Contracts\ApplicationResolver:
-        alias: App\Tracium\ApiApplicationResolver
+    Apirelio\Symfony\Contracts\ApplicationResolver:
+        alias: App\Apirelio\ApiApplicationResolver
 ```
 
 ## Error codes and metadata
@@ -153,13 +153,13 @@ JSON error codes are read from `error.code` by default. Override a code or add
 allow-listed metadata during the current request:
 
 ```php
-use Tracium\Symfony\TraciumManager;
+use Apirelio\Symfony\ApirelioManager;
 
 final class SendInvoiceController
 {
-    public function __invoke(TraciumManager $tracium): Response
+    public function __invoke(ApirelioManager $apirelio): Response
     {
-        $tracium
+        $apirelio
             ->setErrorCode('INVALID_CURRENCY')
             ->addMetadata([
                 'integration_type' => 'accounting',
@@ -174,7 +174,7 @@ final class SendInvoiceController
 Declare allowed custom keys in the bundle configuration:
 
 ```yaml
-tracium:
+apirelio:
     metadata_keys: [integration_type, region]
 ```
 
@@ -191,20 +191,20 @@ For `file_buffer`, schedule a forced flush so low-traffic applications do not
 leave a partial batch behind:
 
 ```bash
-php bin/console tracium:flush
+php bin/console apirelio:flush
 ```
 
 Useful options:
 
 ```yaml
-tracium:
+apirelio:
     transport: messenger
     messenger_bus: messenger.default_bus
     timeout_seconds: 2
     connect_timeout_seconds: 0.5
     batch_size: 500
     flush_interval_seconds: 10
-    buffer_path: '%kernel.cache_dir%/tracium/events.ndjson'
+    buffer_path: '%kernel.cache_dir%/apirelio/events.ndjson'
     error_code_json_path: error.code
     capture_headers: [x-api-version, x-sdk-version, user-agent]
 ```

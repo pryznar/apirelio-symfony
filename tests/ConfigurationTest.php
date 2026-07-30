@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Tests;
+namespace Apirelio\Symfony\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
-use Tracium\Symfony\DependencyInjection\Configuration;
+use Apirelio\Symfony\DependencyInjection\Configuration;
 
 final class ConfigurationTest extends TestCase
 {

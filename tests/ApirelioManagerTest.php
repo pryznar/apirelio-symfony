@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tracium\Symfony\Tests;
+namespace Apirelio\Symfony\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -13,15 +13,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Tracium\Symfony\Contracts\ApplicationResolver;
-use Tracium\Symfony\Contracts\CustomerResolver;
-use Tracium\Symfony\Contracts\EventTransport;
-use Tracium\Symfony\Data\TraciumApplication;
-use Tracium\Symfony\Data\TraciumCustomer;
-use Tracium\Symfony\Support\RouteNormalizer;
-use Tracium\Symfony\TraciumManager;
+use Apirelio\Symfony\Contracts\ApplicationResolver;
+use Apirelio\Symfony\Contracts\CustomerResolver;
+use Apirelio\Symfony\Contracts\EventTransport;
+use Apirelio\Symfony\Data\ApirelioApplication;
+use Apirelio\Symfony\Data\ApirelioCustomer;
+use Apirelio\Symfony\Support\RouteNormalizer;
+use Apirelio\Symfony\ApirelioManager;
 
-final class TraciumManagerTest extends TestCase
+final class ApirelioManagerTest extends TestCase
 {
     public function test_it_captures_the_shared_privacy_safe_event_contract(): void
     {
@@ -87,7 +87,7 @@ final class TraciumManagerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    private function manager(RequestStack $stack, EventTransport $transport): TraciumManager
+    private function manager(RequestStack $stack, EventTransport $transport): ApirelioManager
     {
         $routes = new RouteCollection();
         $routes->add('invoice.create', new Route('/api/invoices/{invoice}'));
@@ -95,19 +95,19 @@ final class TraciumManagerTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
         $router->method('getRouteCollection')->willReturn($routes);
         $customers = new class implements CustomerResolver {
-            public function resolve(Request $request): TraciumCustomer
+            public function resolve(Request $request): ApirelioCustomer
             {
-                return new TraciumCustomer('customer_42', 'Acme Europe', 'growth');
+                return new ApirelioCustomer('customer_42', 'Acme Europe', 'growth');
             }
         };
         $applications = new class implements ApplicationResolver {
-            public function resolve(Request $request): TraciumApplication
+            public function resolve(Request $request): ApirelioApplication
             {
-                return new TraciumApplication('billing-production', 'Billing Production');
+                return new ApirelioApplication('billing-production', 'Billing Production');
             }
         };
 
-        return new TraciumManager(
+        return new ApirelioManager(
             $stack,
             $transport,
             new RouteNormalizer($router),
@@ -115,8 +115,8 @@ final class TraciumManagerTest extends TestCase
             $applications,
             [
                 'enabled' => true,
-                'api_key' => 'trc_test_secret',
-                'endpoint' => 'https://ingest.tracium.test',
+                'api_key' => 'apr_test_secret',
+                'endpoint' => 'https://ingest.apirelio.test',
                 'service' => 'billing-api',
                 'environment' => 'production',
                 'release' => '2026.07.29.1',
