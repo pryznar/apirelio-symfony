@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Use the active `https://apirelio.com` ingestion endpoint by default.
+
 ## 0.2.0
 
 - Rebrand the bundle, namespace, extension and commands to Apirelio.

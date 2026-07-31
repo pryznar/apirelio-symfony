@@ -18,7 +18,7 @@ final class HttpBatchTransport extends \Apirelio\Core\Transport\HttpBatchTranspo
         parent::__construct(
             new SymfonyIngestionClient($http),
             new TransportConfig(
-                endpoint: (string) ($config['endpoint'] ?? 'https://api.apirelio.com'),
+                endpoint: (string) ($config['endpoint'] ?? 'https://apirelio.com'),
                 apiKey: (string) ($config['api_key'] ?? ''),
                 timeoutSeconds: (float) ($config['timeout_seconds'] ?? 2),
                 connectTimeoutSeconds: (float) ($config['connect_timeout_seconds'] ?? 0.5),
