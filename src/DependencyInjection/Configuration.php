@@ -18,7 +18,7 @@ final class Configuration implements ConfigurationInterface
 
         $children = $rootNode->children();
         $children->booleanNode('enabled')->defaultTrue();
-        $children->scalarNode('endpoint')->defaultValue('https://api.apirelio.com')->cannotBeEmpty();
+        $children->scalarNode('endpoint')->defaultValue('https://apirelio.com')->cannotBeEmpty();
         $children->scalarNode('api_key')->defaultValue('');
         $children->scalarNode('service')->defaultValue('symfony')->cannotBeEmpty();
         $children->scalarNode('environment')->defaultValue('production')->cannotBeEmpty();
