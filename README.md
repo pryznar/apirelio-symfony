@@ -1,5 +1,9 @@
 # Apirelio Symfony SDK
 
+[Documentation](https://apirelio.com/docs/php/symfony) · [Packagist](https://packagist.org/packages/apirelio/symfony) · [Apirelio](https://apirelio.com)
+
+> Connect Symfony API errors, latency and releases to the affected customers without capturing request or response payloads.
+
 Fail-safe customer integration analytics for Symfony APIs. The bundle records
 normalized endpoint metrics and customer context without capturing request or
 response bodies, credentials, cookies, query strings, IP addresses, or personal
