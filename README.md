@@ -12,7 +12,7 @@ from `apirelio/php-core`, installed automatically by Composer.
 
 ## Requirements
 
-- PHP 8.2, 8.3 or 8.4
+- PHP 8.2+
 - Symfony 6.4, 7.4 or 8.x
 
 Symfony 8 itself requires PHP 8.4. Symfony 6.4 and 7.4 can be used on PHP 8.2.
@@ -20,7 +20,7 @@ Symfony 8 itself requires PHP 8.4. Symfony 6.4 and 7.4 can be used on PHP 8.2.
 ## Installation
 
 ```bash
-composer require apirelio/symfony:^0.2
+composer require apirelio/symfony:^1.0
 ```
 
 Register the bundle:

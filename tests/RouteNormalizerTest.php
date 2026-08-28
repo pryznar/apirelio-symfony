@@ -17,7 +17,7 @@ final class RouteNormalizerTest extends TestCase
     {
         $routes = new RouteCollection;
         $routes->add('invoice.show', new Route('/api/invoices/{invoice}'));
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router->method('getRouteCollection')->willReturn($routes);
         $request = Request::create('/api/invoices/123?token=secret');
         $request->attributes->set('_route', 'invoice.show');
@@ -30,7 +30,7 @@ final class RouteNormalizerTest extends TestCase
 
     public function test_it_redacts_identifiers_without_a_matched_route(): void
     {
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $request = Request::create('/api/invoices/123/550e8400-e29b-41d4-a716-446655440000');
 
         self::assertSame(
