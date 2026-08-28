@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0 - 2026-08-28
+
+- Publish the first stable Symfony SDK on PHP Core 1.x.
+- Test supported combinations through PHP 8.5 and PHPUnit 13.
+- Report the published SDK version in telemetry.
+
 ## 0.2.1
 
 - Use the active `https://apirelio.com` ingestion endpoint by default.
