@@ -96,7 +96,7 @@ final readonly class ApirelioManager
                 application: $application,
                 apiVersion: $request->headers->get('x-api-version'),
                 sdk: 'symfony',
-                sdkVersion: '0.1.0',
+                sdkVersion: '1.0.0',
                 release: is_string($this->config['release']) ? $this->config['release'] : null,
                 errorCode: $this->errorCode($request, $response),
                 metadata: $metadata,
