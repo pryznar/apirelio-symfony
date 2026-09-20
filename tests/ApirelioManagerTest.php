@@ -66,7 +66,7 @@ final class ApirelioManagerTest extends TestCase
         self::assertSame('billing-production', $event['application_id']);
         self::assertSame('VALIDATION_FAILED', $event['error_code']);
         self::assertSame('v2', $event['api_version']);
-        self::assertSame('1.0.0', $event['sdk_version']);
+        self::assertSame('1.0.1', $event['sdk_version']);
         self::assertSame(['region' => 'eu-central', 'header.x-api-version' => 'v2'], $event['metadata']);
         self::assertStringNotContainsString('secret', json_encode($event, JSON_THROW_ON_ERROR));
         self::assertStringNotContainsString('card_number', json_encode($event, JSON_THROW_ON_ERROR));
